@@ -270,11 +270,4 @@ app.post("/usuarios/:id/tornar-admin", verificaAdmin, async (req, res) => {
 });
 
 // --- Iniciar o Servidor ---
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
-  console.log(`Acesse o frontend em http://localhost:${PORT}`);
-  console.log(
-    `Rotas da API de usuário em http://localhost:${PORT}/api/usuarios`
-  );
-});
+module.exports = app;
