@@ -1,0 +1,31 @@
+<div class="container mt-5">
+    <h2>{{pageTitle}}</h2>
+    
+    {{#if errorMessage}}
+        <div class="alert alert-danger" role="alert">
+            {{errorMessage}}
+        </div>
+    {{/if}}
+
+    <form action="/api/usuarios/{{usuario._id}}?_method=PUT" method="POST">
+        <div class="mb-3">
+            <label for="nome" class="form-label">Nome:</label>
+            <input type="text" class="form-control" id="nome" name="nome" value="{{usuario.nome}}" required>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email:</label>
+            <input type="email" class="form-control" id="email" name="email" value="{{usuario.email}}" required>
+        </div>
+        <div class="mb-3">
+            <label for="idade" class="form-label">Idade:</label>
+            <input type="number" class="form-control" id="idade" name="idade" value="{{usuario.idade}}">
+        </div>
+        <div class="mb-3">
+            <label for="senha" class="form-label">Nova Senha (deixe em branco para não alterar):</label>
+            <input type="password" class="form-control" id="senha" name="senha">
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+        <a href="/usuarios" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>

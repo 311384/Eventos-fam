@@ -1,0 +1,70 @@
+<div class="container mt-5">
+  <h2>Bem-vindo, {{usuario.nome}}!</h2>
+  <p>Esta é a sua área restrita. Apenas usuários logados podem ver esta página.</p>
+  <p>Aqui você poderá ver informações personalizadas ou acessar funcionalidades
+    exclusivas.</p>
+
+  <img
+    src="/img/ana.jpg"
+    alt="Foto de perfil do usuário"
+    class="img-fluid rounded-circle mb-3"
+    style="max-width: 150px; height: auto;"
+  />
+
+  <hr />
+
+  <div class="d-flex align-items-center mb-4">
+    <img
+      src="/img/iconi.png"
+      alt="Ícone de informação"
+      style="width: 30px; height: 30px; margin-right: 10px;"
+    />
+    >
+    <p class="mb-0">Aqui estão alguns detalhes importantes sobre sua conta.</p>
+  </div>
+
+  <h3>Galeria de Momentos:</h3>
+  <div class="row">
+    <div class="col-md-4 mb-4 d-flex flex-column align-items-center">
+      <img
+        src="/img/background.jpg"
+        alt="Um momento feliz em família"
+        class="img-fluid rounded shadow-sm"
+        style="max-width: 80%;"
+      />
+      <small class="d-block text-center mt-2">Ana, Yasmin e Cecília</small>
+    </div>
+    <div class="col-md-4 mb-4 d-flex flex-column align-items-center">
+      <img
+        src="/img/yasmin.jpg"
+        alt="Crianças brincando no parque"
+        class="img-fluid rounded shadow-sm"
+        style="max-width: 80%;"
+      />
+      <small class="d-block text-center mt-2">Dia no parque</small>
+    </div>
+    <div class="col-md-4 mb-4 d-flex flex-column align-items-center">
+      <img
+        src="/img/Batismo.jpg"
+        alt="Celebrando um aniversário"
+        class="img-fluid rounded shadow-sm"
+        style="max-width: 80%;"
+      />
+      <small class="d-block text-center mt-2">Batismo da Yasmin</small>
+    </div>
+  </div>
+
+  <hr />
+
+  <h3>Seus Dados Cadastrais:</h3>
+  <ul>
+    <li><strong>ID:</strong> {{usuario._id}}</li>
+    <li><strong>Nome:</strong> {{usuario.nome}}</li>
+    <li><strong>Email:</strong> {{usuario.email}}</li>
+    <li><strong>Idade:</strong> {{usuario.idade}}</li>
+    <li><strong>Membro desde:</strong> {{usuario.dataCadastro}}</li>
+  </ul>
+
+  <p><a href="/">Voltar para a Home</a></p>
+  <p><a href="/logout">Sair (Logout)</a></p>
+</div>

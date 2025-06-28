@@ -1,0 +1,43 @@
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{pageTitle}} - TRABALHANDOCOMMONGO</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Home Page de ponto de encontro da Família Gomes & Dourado</h1>
+      <nav>
+        <ul>
+          <li><a href="/">Home</a></li>
+
+          {{#if usuario.admin}}
+            <li><a href="/register">Registrar Usuário</a></li>
+            <li><a href="/usuarios">Listar Usuários</a></li>
+          {{/if}}
+
+          {{#if logado}}
+            <li><a href="/dashboard">Dashboard</a></li>
+            <li><a href="/logout">Logout</a></li>
+          {{else}}
+            <li><a href="/login">Login</a></li>
+          {{/if}}
+        </ul>
+
+        {{#if usuario}}
+          <p>Olá, {{usuario.nome}}{{#if usuario.admin}} (Admin){{/if}}!</p>
+        {{/if}}
+      </nav>
+    </header>
+
+    <main>
+      {{{body}}}
+    </main>
+
+    <footer>
+      <p>&copy; {{currentYear}} Meu Projeto. Todos os direitos reservados.</p>
+    </footer>
+    <script src="/js/script.js"></script>
+  </body>
+</html>

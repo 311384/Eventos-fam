@@ -1,0 +1,57 @@
+<div class="container mt-5">
+  <h2>{{pageTitle}}</h2>
+
+  {{#if usuarios}}
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Nome</th>
+          <th scope="col">Email</th>
+          <th scope="col">Idade</th>
+          <th scope="col">Data de Cadastro</th>
+          <th scope="col">Admin</th>
+          <!-- nova coluna -->
+          <th scope="col">Ações</th>
+        </tr>
+      </thead>
+
+<tbody>
+  {{#each usuarios}}
+  <tr>
+    <th scope="row">{{@index}}</th>
+    <td>{{this.nome}}</td>
+    <td>{{this.email}}</td>
+    <td>{{this.idade}}</td>
+    <td>{{this.dataCadastro}}</td>
+    <td>{{#if this.admin}}Sim{{else}}Não{{/if}}</td>
+
+    <td>
+      <a href="/usuarios/editar/{{this._id}}" class="btn btn-warning btn-sm">Editar</a>
+
+      <form action="/api/usuarios/{{this._id}}?_method=DELETE" method="POST" style="display:inline;">
+        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir este usuário?');">Excluir</button>
+      </form>
+
+      {{#unless this.admin}}
+        {{#if ../req.usuario.admin}} <!-- Verifica se o logado é admin -->
+        <form action="/usuarios/{{this._id}}/tornar-admin" method="POST" style="display:inline;">
+          <button type="submit" class="btn btn-info btn-sm">Tornar Admin</button>
+        </form>
+        {{/if}}
+      {{/unless}}
+    </td>
+  </tr>
+  {{/each}}
+</tbody>
+
+    </table>
+  {{else}}
+    <div class="alert alert-info" role="alert">
+      Nenhum usuário cadastrado ainda.
+      <a href="/register" class="alert-link">Registre um novo usuário!</a>
+    </div>
+  {{/if}}
+
+  <p><a href="/">Voltar para a Home</a></p>
+</div>
