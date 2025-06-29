@@ -12,6 +12,15 @@ const bcrypt = require("bcryptjs");
 const verificaAdmin = require("./middlewares/verificaAdmin");
 
 const app = express();
+//para teste
+app.get("/debug-env", (req, res) => {
+  res.json({
+    MONGODB_URI: process.env.MONGODB_URI ? "✅ definida" : "❌ não definida",
+    SESSION_SECRET: process.env.SESSION_SECRET
+      ? "✅ definida"
+      : "❌ não definida",
+  });
+});
 
 // --- Configuração do Handlebars ---
 app.engine(
