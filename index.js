@@ -17,11 +17,11 @@ console.log(">> MONGODB_URI RAW:", JSON.stringify(process.env.MONGODB_URI));
 // Diagnóstico para verificar se as variáveis de ambiente estão disponíveis no Vercel
 app.get("/debug-vercel", (req, res) => {
   res.json({
-    MONGODB_URI: process.env.MONGODB_URI || "❌ não definida",
+    MONGODB_URI: process.env.MONGODB_URI ? "✅ definida" : "❌ não definida",
     SESSION_SECRET: process.env.SESSION_SECRET
       ? "✅ definida"
       : "❌ não definida",
-    MONGODB_URI_length: process.env.MONGODB_URI?.length || 0,
+    comprimento_da_uri: process.env.MONGODB_URI?.length || 0,
   });
 });
 
