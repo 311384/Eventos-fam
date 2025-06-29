@@ -12,6 +12,8 @@ const bcrypt = require("bcryptjs");
 const verificaAdmin = require("./middlewares/verificaAdmin");
 
 const app = express();
+console.log(">> MONGODB_URI RAW:", JSON.stringify(process.env.MONGODB_URI));
+
 //para teste
 app.get("/debug-env", (req, res) => {
   res.json({
