@@ -14,13 +14,14 @@ const verificaAdmin = require("./middlewares/verificaAdmin");
 const app = express();
 console.log(">> MONGODB_URI RAW:", JSON.stringify(process.env.MONGODB_URI));
 
-//para teste
-app.get("/debug-env", (req, res) => {
+// Diagnóstico para verificar se as variáveis de ambiente estão disponíveis no Vercel
+app.get("/debug-vercel", (req, res) => {
   res.json({
-    MONGODB_URI: process.env.MONGODB_URI ? "✅ definida" : "❌ não definida",
+    MONGODB_URI: process.env.MONGODB_URI || "❌ não definida",
     SESSION_SECRET: process.env.SESSION_SECRET
       ? "✅ definida"
       : "❌ não definida",
+    MONGODB_URI_length: process.env.MONGODB_URI?.length || 0,
   });
 });
 
