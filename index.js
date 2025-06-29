@@ -41,14 +41,22 @@ app.use(express.static("public"));
 app.use(methodOverride("_method"));
 
 // --- Configuração da Sessão ---
+// Pegando a URL do MongoDB do ambiente (pode ser undefined se não configurada)
 const MONGODB_URI = process.env.MONGODB_URI;
+
+if (!MONGODB_URI) {
+  console.error("Erro: A variável de ambiente MONGODB_URI não está definida!");
+  process.exit(1); // força o app a fechar para evitar erro silencioso
+}
+
 app.use(
   session({
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET || "uma_chave_padrao_muito_insegura",
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
-      mongoUrl: process.env.MONGODB_URI, // <-- minúsculo 'u' e exato assim
+      mongoUrl: MONGODB_URI,
+      collectionName: "sessions", // opcional, nome da coleção no MongoDB para sessões
     }),
     cookie: {
       maxAge: 1000 * 60 * 60 * 24, // 1 dia
