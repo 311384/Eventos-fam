@@ -10,6 +10,7 @@ const MongoStore = require("connect-mongo");
 require("dotenv").config();
 const bcrypt = require("bcryptjs");
 const verificaAdmin = require("./middlewares/verificaAdmin");
+const path = require("path"); // Adicionada esta linha para usar caminhos absolutos
 
 const app = express();
 console.log(">> MONGODB_URI RAW:", JSON.stringify(process.env.MONGODB_URI));
@@ -26,14 +27,15 @@ app.get("/debug-vercel", (req, res) => {
 app.engine(
   "handlebars",
   exphbs({
-    // Correção aplicada: Usar exphbs() diretamente, sem .engine
     defaultLayout: "main",
-    layoutsDir: __dirname + "/views/layouts/",
-    partialsDir: __dirname + "/views/partials/",
+    // Usando path.join para garantir caminhos absolutos no Vercel
+    layoutsDir: path.join(__dirname, "views", "layouts"),
+    partialsDir: path.join(__dirname, "views", "partials"),
   })
 );
+// Definindo a pasta de views com caminho absoluto
 app.set("view engine", "handlebars");
-app.set("views", "./views");
+app.set("views", path.join(__dirname, "views"));
 
 // --- Middleware ---
 app.use(express.json());
@@ -42,12 +44,11 @@ app.use(express.static("public"));
 app.use(methodOverride("_method"));
 
 // --- Configuração da Sessão ---
-// Pegando a URL do MongoDB do ambiente (pode ser undefined se não configurada)
 const MONGODB_URI = process.env.MONGODB_URI;
 
 if (!MONGODB_URI) {
   console.error("Erro: A variável de ambiente MONGODB_URI não está definida!");
-  process.exit(1); // força o app a fechar para evitar erro silencioso
+  process.exit(1);
 }
 
 app.use(
@@ -57,7 +58,7 @@ app.use(
     saveUninitialized: false,
     store: MongoStore.create({
       mongoUrl: MONGODB_URI,
-      collectionName: "sessions", // opcional, nome da coleção no MongoDB para sessões
+      collectionName: "sessions",
     }),
     cookie: {
       maxAge: 1000 * 60 * 60 * 24, // 1 dia
@@ -67,23 +68,19 @@ app.use(
 
 // --- Middleware para compartilhar sessão e usuário com templates ---
 app.use(async (req, res, next) => {
-  // Sempre disponibiliza o req para os templates (se precisar)
   res.locals.req = req;
 
   if (req.session.userId) {
     try {
-      // Busca o usuário sem a senha para não vazar info sensível
       const usuario = await Usuario.findById(req.session.userId)
         .select("-senha")
         .lean();
 
       if (usuario) {
-        // Disponibiliza o usuário e flags para o template
         res.locals.usuario = usuario;
         res.locals.logado = true;
         res.locals.isAdmin = usuario.admin === true;
       } else {
-        // Se não encontrar usuário na sessão
         res.locals.usuario = null;
         res.locals.logado = false;
         res.locals.isAdmin = false;
@@ -95,7 +92,6 @@ app.use(async (req, res, next) => {
       res.locals.isAdmin = false;
     }
   } else {
-    // Usuário não logado
     res.locals.usuario = null;
     res.locals.logado = false;
     res.locals.isAdmin = false;
@@ -116,7 +112,7 @@ app.get("/", (req, res) => {
   res.render("home", {
     pageTitle: "Bem-vindo à API de Usuários",
     message: "Eventos Contratados",
-    logo: "/img/ana.jpg", // Caminho corrigido para arquivos estáticos
+    logo: "/img/ana.jpg",
   });
 });
 
@@ -207,7 +203,7 @@ app.post("/login", async (req, res) => {
         pageTitle: "Login de Usuário",
         errorMessage: "Email ou senha inválidos.",
         oldInput: { email },
-      }); // CORRIGIDO: Adicionado '}' aqui
+      });
     }
 
     const isMatch = await bcrypt.compare(senha, usuario.senha);
