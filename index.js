@@ -40,7 +40,7 @@ app.set("views", path.join(__dirname, "views"));
 // --- Middleware ---
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static("public"));
+app.use(express.static(path.join(__dirname, "public"))); // Linha corrigida para usar caminho absoluto
 app.use(methodOverride("_method"));
 
 // --- Configuração da Sessão ---
