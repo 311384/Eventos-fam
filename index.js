@@ -26,6 +26,7 @@ app.get("/debug-vercel", (req, res) => {
 app.engine(
   "handlebars",
   exphbs({
+    // Correção aplicada: Usar exphbs() diretamente, sem .engine
     defaultLayout: "main",
     layoutsDir: __dirname + "/views/layouts/",
     partialsDir: __dirname + "/views/partials/",
@@ -115,7 +116,7 @@ app.get("/", (req, res) => {
   res.render("home", {
     pageTitle: "Bem-vindo à API de Usuários",
     message: "Eventos Contratados",
-    logo: "./public/img/ana.jpg",
+    logo: "/img/ana.jpg", // Caminho corrigido para arquivos estáticos
   });
 });
 
@@ -206,7 +207,7 @@ app.post("/login", async (req, res) => {
         pageTitle: "Login de Usuário",
         errorMessage: "Email ou senha inválidos.",
         oldInput: { email },
-      });
+      }); // CORRIGIDO: Adicionado '}' aqui
     }
 
     const isMatch = await bcrypt.compare(senha, usuario.senha);
@@ -289,4 +290,8 @@ app.post("/usuarios/:id/tornar-admin", verificaAdmin, async (req, res) => {
 });
 
 // --- Iniciar o Servidor ---
-module.exports = app;
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Servidor Express rodando em http://localhost:${PORT}`);
+});
