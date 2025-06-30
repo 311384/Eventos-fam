@@ -110,7 +110,7 @@ app.use("/api/usuarios", usuarioRoutes);
 
 app.get("/", (req, res) => {
   res.render("home", {
-    pageTitle: "Bem-vindo à API de Usuários",
+    pageTitle: "Bem-vindo ao Eventos Fam",
     message: "Eventos Contratados",
     logo: "/img/ana.jpg",
   });
