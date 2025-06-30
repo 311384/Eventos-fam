@@ -188,8 +188,10 @@ app.get("/login", (req, res) => {
 app.post("/login", async (req, res) => {
   try {
     const { email, senha } = req.body;
+    console.log("LOGIN_DEBUG: 1. Tentativa de login para email:", email); // DEBUG LOG
 
     if (!email || !senha) {
+      console.log("LOGIN_DEBUG: 2. Email ou senha ausentes."); // DEBUG LOG
       return res.status(400).render("login", {
         pageTitle: "Login de Usuário",
         errorMessage: "Email e senha são obrigatórios.",
@@ -198,7 +200,15 @@ app.post("/login", async (req, res) => {
     }
 
     const usuario = await Usuario.findOne({ email });
+    console.log(
+      "LOGIN_DEBUG: 3. Resultado findOne para email:",
+      email,
+      "Usuário encontrado:",
+      !!usuario
+    ); // DEBUG LOG
+
     if (!usuario) {
+      console.log("LOGIN_DEBUG: 4. Usuário não encontrado."); // DEBUG LOG
       return res.status(401).render("login", {
         pageTitle: "Login de Usuário",
         errorMessage: "Email ou senha inválidos.",
@@ -206,8 +216,14 @@ app.post("/login", async (req, res) => {
       });
     }
 
+    // Adicione um log para verificar se a senha do usuário existe antes de comparar
+    console.log("LOGIN_DEBUG: 5. Usuario.senha existe:", !!usuario.senha); // DEBUG LOG
+
     const isMatch = await bcrypt.compare(senha, usuario.senha);
+    console.log("LOGIN_DEBUG: 6. Resultado bcrypt.compare (isMatch):", isMatch); // DEBUG LOG
+
     if (!isMatch) {
+      console.log("LOGIN_DEBUG: 7. Senha não corresponde."); // DEBUG LOG
       return res.status(401).render("login", {
         pageTitle: "Login de Usuário",
         errorMessage: "Email ou senha inválidos.",
@@ -217,10 +233,18 @@ app.post("/login", async (req, res) => {
 
     req.session.userId = usuario._id;
     req.session.isAuthenticated = true;
+    console.log(
+      "LOGIN_DEBUG: 8. Sessão definida para userId:",
+      req.session.userId
+    ); // DEBUG LOG
 
     res.redirect("/dashboard");
+    console.log("LOGIN_DEBUG: 9. Redirecionando para dashboard."); // DEBUG LOG
   } catch (error) {
-    console.error("Erro no processo de login:", error);
+    console.error(
+      "LOGIN_DEBUG: Erro CRÍTICO no processo de login (CATCH BLOCK):",
+      error
+    ); // DEBUG LOG (MUDEI A MENSAGEM)
     res.status(500).render("error", {
       pageTitle: "Erro de Login",
       errorMessage:
