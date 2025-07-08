@@ -131,10 +131,7 @@ router.post("/comentario", async (req, res) => {
   // Removendo :id da URL
   try {
     const { emailUsuario, textoComentario } = req.body; // Pega o e-mail e o texto do comentário do corpo
-    // --- ADICIONE ESTAS DUAS LINHAS PARA DEBUG ---
-    console.log("DEBUG: Email recebido no POST de comentário:", emailUsuario);
-    console.log("DEBUG: Texto do comentário recebido:", textoComentario);
-    // --- FIM DO DEBUG ---
+
     if (!emailUsuario || emailUsuario.trim() === "") {
       return res.status(400).send("O e-mail do usuário não foi fornecido.");
     }
@@ -185,17 +182,6 @@ router.get("/detalhes/:email", async (req, res) => {
         message: "Usuário não encontrado com o e-mail fornecido.",
       });
     }
-
-    // --- ADICIONE ESTE LOG AQUI ---
-    console.log(
-      "DEBUG GET: Comentários do usuário antes de renderizar:",
-      usuario.comentarios
-    );
-    console.log(
-      "DEBUG GET: Quantidade de comentários:",
-      usuario.comentarios ? usuario.comentarios.length : 0
-    );
-    // --- FIM DO LOG ---
 
     let successMessage = null;
     if (req.query.success) {
