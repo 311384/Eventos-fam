@@ -19,6 +19,8 @@
 
           {{#if logado}}
             <li><a href="/dashboard">Dashboard</a></li>
+            <li><a href="/api/usuarios/detalhes/{{usuario.email}}">Postar
+                Comentário</a></li>
             <li><a href="/logout">Logout</a></li>
           {{else}}
             <li><a href="/login">Login</a></li>
