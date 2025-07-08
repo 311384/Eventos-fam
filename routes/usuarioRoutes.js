@@ -171,7 +171,7 @@ router.post("/comentario", async (req, res) => {
     res.status(500).send("Erro interno do servidor.");
   }
 });
-router.get("/usuarios/detalhes/:email", async (req, res) => {
+router.get("/detalhes/:email", async (req, res) => {
   try {
     const { email } = req.params; // Captura o e-mail da URL
 
