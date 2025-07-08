@@ -1,30 +1,45 @@
-// models/Usuario.js
 const mongoose = require("mongoose");
 
+// --- 1. Definição do esquema para um único comentário ---
+const comentarioSchema = new mongoose.Schema({
+  texto: {
+    type: String,
+    required: true,
+  },
+  data: {
+    type: Date,
+    default: Date.now,
+  },
+  // Opcional: Se quiser referenciar o autor do comentário (o ID do usuário que postou)
+  // autor: {
+  //     type: mongoose.Schema.Types.ObjectId,
+  //     ref: 'Usuario' // Isso cria uma referência ao próprio modelo de Usuário
+  // }
+});
+
+// --- 2. Definição do esquema do Usuário (com o novo campo 'comentarios') ---
 const UsuarioSchema = new mongoose.Schema({
   nome: {
     type: String,
     required: true,
-    trim: true, // Remove espaços em branco antes e depois do nome
+    trim: true,
   },
   email: {
     type: String,
     required: true,
-    unique: true, // Garante que cada email seja único
-    trim: true, // Remove espaços em branco
-    lowercase: true, // Converte o email para minúsculas
+    unique: true,
+    trim: true,
+    lowercase: true,
   },
   senha: {
-    // <-- NOVO CAMPO: Para armazenar a senha criptografada
     type: String,
     required: true,
-    minlength: 6, // Opcional: define um tamanho mínimo para a senha
+    minlength: 6,
   },
   admin: {
     type: Boolean,
-    default: false, // Por padrão, todos os usuários são comuns
+    default: false,
   },
-
   idade: {
     type: Number,
   },
@@ -35,6 +50,11 @@ const UsuarioSchema = new mongoose.Schema({
   ultimaAtualizacao: {
     type: Date,
     default: Date.now,
+  },
+  // --- NOVO CAMPO ADICIONADO PARA COMENTÁRIOS ---
+  comentarios: {
+    type: [comentarioSchema], // Isso diz ao Mongoose que 'comentarios' será um array de objetos que seguem o 'comentarioSchema'
+    default: [], // Inicializa como um array vazio por padrão, para evitar 'undefined'
   },
 });
 
