@@ -1,0 +1,49 @@
+<h2>Deixar um Comentário</h2>
+<form action="/api/usuarios/comentario" method="POST">
+  <div class="form-group">
+    <label for="emailUsuario">E-mail do Usuário:</label>
+    <input
+      type="email"
+      class="form-control"
+      id="emailUsuario"
+      name="emailUsuario"
+      value="{{usuario.email}}"
+      required
+    />
+  </div>
+  <div class="form-group mt-3">
+    <label for="textoComentario">Seu Comentário:</label>
+    <textarea
+      class="form-control"
+      id="textoComentario"
+      name="textoComentario"
+      rows="3"
+      required
+    ></textarea>
+  </div>
+  <button type="submit" class="btn btn-success mt-3">Enviar Comentário</button>
+</form>
+
+{{#if successMessage}}
+  <div class="alert alert-success mt-3" role="alert">
+    {{successMessage}}
+  </div>
+{{/if}}
+
+<h3>Comentários:</h3>
+<div class="comments-section">
+  {{#if usuario.comentarios.length}}
+    {{#each usuario.comentarios}}
+      <div class="card mb-2">
+        <div class="card-body">
+          <p class="card-text">{{this.texto}}</p>
+          <small class="text-muted">Postado em: {{this.data}}</small>
+          {{! Se você adicionar o autor, pode exibir aqui: }}
+          {{!-- <small class="text-muted">Por: {{this.autor.nome}}</small> --}}
+        </div>
+      </div>
+    {{/each}}
+  {{else}}
+    <p>Nenhum comentário ainda.</p>
+  {{/if}}
+</div>
