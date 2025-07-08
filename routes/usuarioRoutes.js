@@ -176,33 +176,35 @@ router.post("/comentario", async (req, res) => {
 });
 router.get("/detalhes/:email", async (req, res) => {
   try {
-    const { email } = req.params; // Captura o e-mail da URL
+    const { email } = req.params;
+    // Garante que o .lean() está sendo usado aqui para evitar os avisos do Handlebars
+    const usuario = await Usuario.findOne({ email: email }).lean();
 
-    // 1. Busca o usuário pelo e-mail no banco de dados
-    // Certifique-se de que o campo 'email' no seu modelo Mongoose seja único ou que você
-    // saiba que esta busca retornará o usuário correto.
-    const usuario = await Usuario.findOne({ email: email });
-
-    // 2. Verifica se o usuário foi encontrado
     if (!usuario) {
-      // Se o usuário não for encontrado, você pode renderizar uma página de erro
-      // ou redirecionar para uma lista de usuários, etc.
       return res.status(404).render("error", {
         message: "Usuário não encontrado com o e-mail fornecido.",
       });
     }
 
-    // Opcional: Lidar com mensagens de sucesso que vêm de um redirecionamento (como o da rota POST de comentário)
+    // --- ADICIONE ESTE LOG AQUI ---
+    console.log(
+      "DEBUG GET: Comentários do usuário antes de renderizar:",
+      usuario.comentarios
+    );
+    console.log(
+      "DEBUG GET: Quantidade de comentários:",
+      usuario.comentarios ? usuario.comentarios.length : 0
+    );
+    // --- FIM DO LOG ---
+
     let successMessage = null;
     if (req.query.success) {
-      successMessage = req.query.success.replace(/_/g, " "); // Substitui "_" por espaços para legibilidade
+      successMessage = req.query.success.replace(/_/g, " ");
     }
 
-    // 3. Renderiza o template Handlebars e passa os dados do usuário
-    // O objeto 'usuario' que você busca já contém o array 'comentarios'
     res.render("usuario-details", {
-      usuario: usuario, // O objeto completo do usuário, incluindo 'comentarios' e 'imagens'
-      successMessage: successMessage, // Para exibir mensagens de sucesso
+      usuario: usuario, // O objeto 'usuario' COMPLETO, incluindo 'comentarios'
+      successMessage: successMessage,
     });
   } catch (error) {
     console.error("Erro ao carregar detalhes do usuário por e-mail:", error);
