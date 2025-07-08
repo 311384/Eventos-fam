@@ -146,9 +146,9 @@ router.post("/comentario", async (req, res) => {
     // Encontre o usuário pelo e-mail
     const usuario = await Usuario.findOne({ email: emailUsuario });
     if (!usuario) {
-      return res
-        .status(404)
-        .send("Usuário não encontrado com o e-mail fornecido.");
+      return res.redirect(
+        `/api/usuarios/detalhes/${emailUsuario}?error=Usuário_não_encontrado_para_postar_comentário.`
+      );
     }
 
     // Adicione o comentário ao array de comentários do usuário
