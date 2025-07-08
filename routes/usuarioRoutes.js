@@ -126,5 +126,86 @@ router.delete("/:id", async (req, res) => {
       .redirect("/usuarios?error=Erro_interno_do_servidor_ao_excluir.");
   }
 });
+// Rota para postar um comentário (usando e-mail no corpo da requisição)
+router.post("/comentario", async (req, res) => {
+  // Removendo :id da URL
+  try {
+    const { emailUsuario, textoComentario } = req.body; // Pega o e-mail e o texto do comentário do corpo
 
+    if (!emailUsuario || emailUsuario.trim() === "") {
+      return res.status(400).send("O e-mail do usuário não foi fornecido.");
+    }
+
+    if (!textoComentario || textoComentario.trim() === "") {
+      return res.status(400).send("O comentário não pode estar vazio.");
+    }
+
+    // Encontre o usuário pelo e-mail
+    const usuario = await Usuario.findOne({ email: emailUsuario });
+    if (!usuario) {
+      return res
+        .status(404)
+        .send("Usuário não encontrado com o e-mail fornecido.");
+    }
+
+    // Adicione o comentário ao array de comentários do usuário
+    usuario.comentarios.push({
+      texto: textoComentario,
+      data: new Date(),
+      // autor: req.user._id // Se você tiver autenticação e quiser associar o autor
+    });
+    await usuario.save();
+
+    // Redireciona para uma página que possa exibir os comentários do usuário
+    // Você pode precisar de uma rota para exibir detalhes de usuário por e-mail,
+    // ou redirecionar para uma página genérica de sucesso.
+    // Por enquanto, vamos redirecionar para a rota que exibe por ID, se ela existir.
+    // Se não, você pode ajustar o redirecionamento para o fluxo da sua aplicação.
+    res.redirect(
+      `/api/usuarios/detalhes/${usuario.email}?success=Comentário_postado_com_sucesso!`
+    ); // Redireciona para a página de detalhes do usuário com uma mensagem de sucesso
+
+    // OU: res.redirect(`/sucesso?mensagem=Comentário_postado_com_sucesso!`);
+  } catch (error) {
+    console.error("Erro ao postar comentário:", error);
+    res.status(500).send("Erro interno do servidor.");
+  }
+});
+router.get("/usuarios/detalhes/:email", async (req, res) => {
+  try {
+    const { email } = req.params; // Captura o e-mail da URL
+
+    // 1. Busca o usuário pelo e-mail no banco de dados
+    // Certifique-se de que o campo 'email' no seu modelo Mongoose seja único ou que você
+    // saiba que esta busca retornará o usuário correto.
+    const usuario = await Usuario.findOne({ email: email });
+
+    // 2. Verifica se o usuário foi encontrado
+    if (!usuario) {
+      // Se o usuário não for encontrado, você pode renderizar uma página de erro
+      // ou redirecionar para uma lista de usuários, etc.
+      return res.status(404).render("error", {
+        message: "Usuário não encontrado com o e-mail fornecido.",
+      });
+    }
+
+    // Opcional: Lidar com mensagens de sucesso que vêm de um redirecionamento (como o da rota POST de comentário)
+    let successMessage = null;
+    if (req.query.success) {
+      successMessage = req.query.success.replace(/_/g, " "); // Substitui "_" por espaços para legibilidade
+    }
+
+    // 3. Renderiza o template Handlebars e passa os dados do usuário
+    // O objeto 'usuario' que você busca já contém o array 'comentarios'
+    res.render("usuario-details", {
+      usuario: usuario, // O objeto completo do usuário, incluindo 'comentarios' e 'imagens'
+      successMessage: successMessage, // Para exibir mensagens de sucesso
+    });
+  } catch (error) {
+    console.error("Erro ao carregar detalhes do usuário por e-mail:", error);
+    res.status(500).render("error", {
+      message: "Erro interno do servidor ao buscar usuário.",
+    });
+  }
+});
 module.exports = router;
